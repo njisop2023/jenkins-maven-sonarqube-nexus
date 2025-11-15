@@ -1,6 +1,12 @@
 pipeline {
-  agent any // This specifies that the pipeline can run on any available agent
-  stages {
+  agent any // This specifies that the pipeline can run on any available agent\\
+
+  environment {
+    // <<<--- Allow reflective access needed by Sonar
+    MAVEN_OPTS = "--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED" // <<<--- ADDED
+   }
+  
+    stages {
     stage('Validate Project') {
         steps {
             sh 'mvn validate'
@@ -30,7 +36,7 @@ pipeline {
         steps {
             sh  """mvn sonar:sonar \
                     -Dsonar.projectKey=java-webapp-projec \
-                    -Dsonar.host.url=http://100.27.25.200:9000 \
+                    -Dsonar.host.url=http://172.31.80.192:9000 \
                     -Dsonar.login=51e07ad6f37ccb7f2d5f218ed9cc4c4da114b567"""
         }
     } 
